@@ -96,7 +96,7 @@ class ModbusSocketFramer(ModbusFramer):
             if not self._validate_slave_id(slave, single):
                 header_txt = self._header["uid"]
                 self.resetFrame()
-                raise NoSuchSlaveException("Not a valid slave id - {}", header_txt)
+                raise NoSuchSlaveException(f"Not a valid slave id - {header_txt}")
             length = self._hsize + self._header["len"] -1
             data = self._buffer[self._hsize : length]
             if (result := self.decoder.decode(data)) is None:
