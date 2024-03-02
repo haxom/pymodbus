@@ -4,6 +4,7 @@ import struct
 
 from pymodbus.exceptions import (
     ModbusIOException,
+    NoSuchSlaveException,
 )
 from pymodbus.framer.base import SOCKET_FRAME_HEADER, ModbusFramer
 from pymodbus.logging import Log
@@ -94,9 +95,8 @@ class ModbusSocketFramer(ModbusFramer):
                 return
             if not self._validate_slave_id(slave, single):
                 header_txt = self._header["uid"]
-                Log.debug("Not a valid slave id - {}, ignoring!!", header_txt)
                 self.resetFrame()
-                return
+                raise NoSuchSlaveException("Not a valid slave id - {}", header_txt)
             length = self._hsize + self._header["len"] -1
             data = self._buffer[self._hsize : length]
             if (result := self.decoder.decode(data)) is None:
